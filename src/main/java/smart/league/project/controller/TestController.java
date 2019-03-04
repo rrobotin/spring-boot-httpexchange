@@ -19,7 +19,6 @@ import smart.league.project.util.web.json.JsonResponse;
 
 import javax.inject.Inject;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
@@ -38,7 +37,7 @@ public class TestController {
 
 	@GetMapping("test")
 	@Async
-	public Callable<ResponseEntity<Object>> test(@RequestParam("param") String param) {
+	public CompletableFuture<ResponseEntity<Object>> test(@RequestParam("param") String param) {
 		
 		HttpExchange exchange = new HttpExchange()
 				.addQueryParam("param", param);
@@ -48,31 +47,31 @@ public class TestController {
 				.handler(palindromeHandler);
 
 		ExecutorService executorService = executorsProvider.getExecutorService();
-	    CompletableFuture<Callable<ResponseEntity<Object>>> asyncResponse = Computation.computeAsync(() -> handleRequest(requestHandler, exchange), executorService)
+	    CompletableFuture<ResponseEntity<Object>> asyncResponse = Computation.computeAsync(() -> handleRequest(requestHandler, exchange), executorService)
 		        .thenApplyAsync(response -> ok(response), executorService)
 		        .exceptionally(error -> handleException(error));
 		
-		return asyncResponse.join();
+	    return asyncResponse;
 
 	}
 
-	private <T> Response<T> handleRequest(RequestHandler router, HttpExchange exchange) {
-		router.handle(exchange);
+	private <T> Response<T> handleRequest(RequestHandler requestHandler, HttpExchange exchange) {
+		requestHandler.handle(exchange);
 		return exchange.getResponse();
 
 	}
 
-	private <T> Callable<ResponseEntity<T>> ok(Response<T> response) {
-		return () -> ResponseEntity.ok(response.getBody());
+	private <T> ResponseEntity<T> ok(Response<T> response) {
+		return ResponseEntity.ok(response.getBody());
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> Callable<ResponseEntity<T>> handleException(Throwable ex) {
+	private <T> ResponseEntity<T> handleException(Throwable ex) {
 		T json = (T) new JsonResponse()
 		                          .with("Status", "INTERNAL_SERVER_ERROR")
 		                          .with("Code", 500)
 		                          .with("Exception", ex)
 		                          .done();
-		return () -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
 	}
 }

@@ -21,8 +21,7 @@ public final class Computation {
 	 * @param <R>
 	 * @return
 	 */
-	public static <R> CompletableFuture<R> computeAsync(Callable<R> callable,
-			ExecutorService executorService) {
+	public static <R> CompletableFuture<R> computeAsync(Callable<R> callable,  ExecutorService executorService) {
 		return CompletableFuture.supplyAsync(() -> {
 			try {
 				return callable.call();

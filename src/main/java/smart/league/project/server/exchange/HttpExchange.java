@@ -1,12 +1,9 @@
 package smart.league.project.server.exchange;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
-import smart.league.project.util.map.LinkedMultiValueMap;
 import smart.league.project.util.map.MultiValueMap;
-
 
 /**
  * An HTTP request/response exchange. A new instance is created for each HTTP request that is
@@ -71,51 +68,39 @@ public final class HttpExchange {
 
 	public MultiValueMap<String, String> getPathParameters() {
 		if (pathParameters == null) {
-			pathParameters = new LinkedMultiValueMap<>();
+			pathParameters = new MultiValueMap<>();
 		}
 		return pathParameters;
 	}
 
 	public HttpExchange addPathParam(final String name, final String param) {
 		if (pathParameters == null) {
-			pathParameters = new LinkedMultiValueMap<>();
+			pathParameters = new MultiValueMap<>();
 		}
 
-		pathParameters.putIfAbsent(name, new LinkedList<>());
-
-		pathParameters.computeIfPresent(name, (key, value) -> {
-			value.add(param);
-			return value;
-		});
-
+		pathParameters.add(name, param);
 		return this;
 	}
 
 	public MultiValueMap<String, String> getQueryParameters() {
 		if (queryParameters == null) {
-			queryParameters = new LinkedMultiValueMap<>();
+			queryParameters = new MultiValueMap<>();
 		}
 		return queryParameters;
 	}
 
 	public HttpExchange addQueryParam(final String name, final String param) {
 		if (queryParameters == null) {
-			queryParameters = new LinkedMultiValueMap<>();
+			queryParameters = new MultiValueMap<>();
 		}
 
-		queryParameters.putIfAbsent(name, new LinkedList<>());
-
-		queryParameters.computeIfPresent(name, (key, value) -> {
-			value.add(param);
-			return value;
-		});
-
+		queryParameters.add(name, param);
 		return this;
 	}
 
 	public HttpExchange addQueryParam(final String name, final String[] params) {
 		if (queryParameters == null) {
-			queryParameters = new LinkedMultiValueMap<>();
+			queryParameters = new MultiValueMap<>();
 		}
 		queryParameters.add(name, params);
 		return this;
