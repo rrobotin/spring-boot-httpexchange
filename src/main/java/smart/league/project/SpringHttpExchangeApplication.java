@@ -7,6 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringHttpExchangeApplication {
 
     public static void main(String[] args) {
+
+
+
         SpringApplication.run(SpringHttpExchangeApplication.class, args);
+    }
+
+    private String getElementValue(String element){
+            return "";
     }
 }

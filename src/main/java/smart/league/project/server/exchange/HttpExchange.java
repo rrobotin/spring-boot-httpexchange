@@ -1,8 +1,12 @@
 package smart.league.project.server.exchange;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
+import org.springframework.http.HttpMethod;
 import smart.league.project.util.map.MultiValueMap;
 
 /**
@@ -19,6 +23,9 @@ public final class HttpExchange {
 	private MultiValueMap<String, String> queryParameters;
 	private SecurityContext securityContext;
 	private Map<String, Object> properties;
+	private HttpMethod method;
+	private URL route;
+	private Map<String, Object> body;
 
 	@SuppressWarnings("rawtypes")
 	private Response response;
@@ -125,5 +132,33 @@ public final class HttpExchange {
 	public <T> Response<T> response(T body) {
 		response =  new Response<T>(body);
 		return response;
+	}
+
+	public HttpMethod getMethod() {
+		return method;
+	}
+
+	public void setMethod(HttpMethod method) {
+		this.method = method;
+	}
+
+	public URL getRoute() {
+		return route;
+	}
+
+	public void setRoute(String route) {
+		try {
+			this.route = new URL(route);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Map<String, Object> getBody() {
+		return body;
+	}
+
+	public void setBody(Map<String, Object> body) {
+		this.body = body;
 	}
 }

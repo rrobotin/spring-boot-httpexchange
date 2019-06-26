@@ -1,8 +1,10 @@
 package smart.league.project.util.web.json;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -34,6 +36,7 @@ public class JsonResponse {
         	return new JsonResponse().with("Error", "Well, this is embarrassing, we are having trouble generating the response for you !");
         }
     }
+
 
     public Map<String, Object> getResponse() {
         return map;
